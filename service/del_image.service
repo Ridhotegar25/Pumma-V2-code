@@ -1,0 +1,15 @@
+[Unit]
+Description=Autostart Delete Capture Script
+After=multi-user.target
+
+[Service]
+Environment="PATH=/home/pi/code/envPumma/bin:/usr/bin:/bin"
+ExecStart=/home/pi/code/envPumma/bin/python3 /home/pi/code/capture/del_image.py
+WorkingDirectory=/home/pi/code/capture
+StandardOutput=append:/home/pi/Data/Log_Delete/del_image.txt
+StandardError=append:/home/pi/Data/Log_Delete/del_image_error.txt
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target

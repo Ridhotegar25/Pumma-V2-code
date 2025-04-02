@@ -1,0 +1,9 @@
+[Unit]
+Description=Run Delete Images Script Every Hour
+
+[Timer]
+OnCalendar=hourly
+Persistent=true
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,6 @@
+SUBSYSTEM=="tty", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="7523", ATTRS{devpath}=="1.3", SYMLINK+="Nano"
+SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", ATTRS{devpath}=="1.4", ATTRS{serial}=="A50285BI", SYMLINK+="Pyrano"
+SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", ATTRS{devpath}=="1.2.4", ATTRS{serial}=="A5069RR4" , SYMLINK+="MPPT"
+SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", ATTRS{devpath}=="1.2.1",ATTRS{serial}=="A5069RR4", SYMLINK+="Wind_Speed"
+SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", ATTRS{devpath}=="1.1",ATTRS{serial}=="A50285BI", SYMLINK+="Water_Press"
+SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", ATTRS{devpath}=="1.2.3",ATTRS{serial}=="A5069RR4", SYMLINK+="Wind_Direct"

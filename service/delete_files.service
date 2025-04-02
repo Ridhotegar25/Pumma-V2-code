@@ -1,0 +1,13 @@
+[Unit]
+Description=Run delete.py at boot
+After=multi-user.target
+
+[Service]
+ExecStart=/usr/bin/python3 /home/pi/code/control_system/delete.py
+Restart=on-failure
+User=pi
+StandardOutput=append:/home/pi/Data/DeleteFiles/delete.txt
+StandardError=append:/home/pi/Data/DeleteFiles/delete.txt
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,13 @@
+[Unit]
+Description=Autoreboot Script
+After=multi-user.target
+
+[Service]
+Environment="PATH=/home/pi/code/envPumma/bin:/usr/bin:/bin"
+ExecStart=/home/pi/code/envPumma/bin/python /home/pi/code/control_system/reboot.py
+WorkingDirectory=/home/pi/code/control_system
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target

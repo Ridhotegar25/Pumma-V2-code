@@ -1,0 +1,13 @@
+[Unit]
+Description=Autostart Capture Script
+After=multi-user.target
+
+[Service]
+Environment="PATH=/home/pi/code/envPumma/bin:/usr/bin:/bin"
+ExecStart=/home/pi/code/envPumma/bin/python /home/pi/code/capture/capture.py
+WorkingDirectory=/home/pi/code/capture
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target

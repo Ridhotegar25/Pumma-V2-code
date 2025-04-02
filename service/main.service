@@ -1,0 +1,15 @@
+[Unit]
+Description=Autostart main py Script
+After=multi-user.target
+[Service]
+Environment="PATH=/home/pi/code/envPumma/bin:/usr/bin:/bin"
+ExecStart=/home/pi/code/envPumma/bin/python3 /home/pi/code/Pumma1/main.py
+WorkingDirectory=/home/pi/code
+Restart=always
+User=pi
+Nice= -10
+CPUSchedulingPolicy=fifo
+CPUSchedulingPriority=99
+
+[Install]
+WantedBy=multi-user.target
