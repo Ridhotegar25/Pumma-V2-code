@@ -14,13 +14,13 @@ from jsnB import measure_distance  # Import fungsi untuk membaca JSN-SR04M
 # MQTT Configuration
 MQTT_BROKER = ""
 MQTT_PORT = 1883
-MQTT_TOPIC = ""
-MQTT_TOPIC2 = ""
+MQTT_TOPIC = "" # Topic Data Sensor yg sudah diolah dan Algoritma deteksi Tsunami 
+MQTT_TOPIC2 = "" #Topic Data Raw Mentah Sensor 
 MQTT_USERNAME = ""
 MQTT_PASSWORD = ""
 
 # Telegram Configuration
-TELEGRAM_BOT_TOKEN = "7903667373:AAED-o7Ya_0G_3xFBCsiWwsEaUrKLHe4zB8"
+TELEGRAM_BOT_TOKEN = "" # Ganti dengan Bot Token Yang sudah dibuat 
 TELEGRAM_CHAT_ID = "-1002374272293"
 
 # Log directory configuration
@@ -136,7 +136,7 @@ def data_processor(queue):
             if alert_level > 0:
                 timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 message = (
-                    f"⚠️ PUMMA SEBESI ⚠️ \n"
+                    f"⚠️ PUMMA SEBESI ⚠️ \n" #Ganti dengan Nama yang sesuai 
                     f"Timestamp: {timestamp}\n"
                     f"Alert Signal: {data['Alert_Signal']}\n"
                     f"RMS: {data['rms']}\n"
