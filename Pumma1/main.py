@@ -9,7 +9,6 @@ from datetime import datetime
 import paho.mqtt.client as mqtt
 from alert import process_and_forecast, process_alert_log
 from readWP import get_sensor_data
-from jsnB import measure_distance  # Import fungsi untuk membaca JSN-SR04M
 
 # MQTT Configuration
 MQTT_BROKER = ""
@@ -95,10 +94,6 @@ def data_processor(queue):
             Water_level_pressure = get_sensor_data()
             forecast_30, forecast_300, alert_signal = process_and_forecast()
             rms_alert_signal, threshold, alert_level = process_alert_log()
-            jsn_distance0 = measure_distance()
-            jsn_distance1 = round(jsn_distance0 /100,2)
-            jsn_distance2 = 1 + (2.198 - jsn_distance1)
-            jsn_distance = round(jsn_distance2,2)
 
             # Dekonstruksi data sensor
             MPa, kPa, Pa, water_level_pressure, bar, mbar, kg_cm2, psi, mH2O, mmH2O, celcius = Water_level_pressure
@@ -106,7 +101,6 @@ def data_processor(queue):
             data = {
                 "TS": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 "Water_level_Pressure": water_level_pressure,
-                "JSN_Distance": jsn_distance if jsn_distance is not None else None,
                 "For30": forecast_30,
                 "For300": forecast_300,
                 "Alert_Signal": alert_signal,
