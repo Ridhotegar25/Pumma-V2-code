@@ -13,12 +13,12 @@ LOG_FILE = "/home/pi/Data/error_log.txt"
 logging.basicConfig(filename=LOG_FILE, level=logging.ERROR, format="%(asctime)s - %(levelname)s - %(message)s")
 
 # Direktori untuk file log
-LOG_DIR = "/home/pi/Data/LogSeaWater"
-ALERT_LOG_DIR = "/home/pi/Data/LogAlert"
+LOG_DIR = "/home/pi/Data/Log_maxbo"
+ALERT_LOG_DIR = "/home/pi/Data/maxbo_LogAlert"
 os.makedirs(ALERT_LOG_DIR, exist_ok=True)  # Pastikan folder log alert ada
 
 def get_log_filename():
-    return os.path.join(LOG_DIR, f"Log_WP {datetime.now().strftime('%d-%m-%Y')}.txt")
+    return os.path.join(LOG_DIR, f"Log_MB{datetime.now().strftime('%d-%m-%Y')}.txt")
 
 def get_alert_log_filename():
     return os.path.join(ALERT_LOG_DIR, f"Log_AS{datetime.now().strftime('%d-%m-%Y')}.txt")
@@ -35,7 +35,11 @@ def read_log_file(filepath, max_lines=300):
 
         for line in lines:
             try:
-                dt_str, value_str = line.strip().split(",")
+                parts = line.strip().split(",")
+                if len(parts) < 3:
+                    continue  # Lewati jika tidak ada cukup kolom
+                dt_str = parts[0].strip()
+                value_str = parts[2].strip()  # Ambil data ke-3 (indeks ke-2)
                 dt = datetime.strptime(dt_str, "%Y-%m-%d %H:%M:%S")
                 value = float(value_str)
                 data.append((dt, value))
@@ -48,7 +52,7 @@ def read_log_file(filepath, max_lines=300):
 
 def polynomial_forecast(data):
     if len(data) < 3:
-        return 0.0
+        return 1.62
 
     x = np.arange(len(data))
     y = np.array(data, dtype=np.float64)
@@ -58,7 +62,7 @@ def polynomial_forecast(data):
         return round(np.polyval(coeffs, len(data)), 3)
     except Exception as e:
         logging.error(f"Error dalam forecasting: {e}")
-        return 0.0
+        return 1.62
 
 def log_alert_signal(alert_signal):
     try:
@@ -72,7 +76,7 @@ def process_and_forecast():
     data = read_log_file(filepath, max_lines=300)
 
     if not data:
-        return 0.0, 0.0, 0.0
+        return 1.62, 1.62, 1.62
 
     now = datetime.now()
     last_15_minutes = now - timedelta(minutes=15)
@@ -81,8 +85,8 @@ def process_and_forecast():
     recent_30_data = [v for d, v in data if d >= last_15_minutes][-30:]
     recent_300_data = [v for d, v in data if d >= last_1_hour][-300:]
 
-    forecast_30 = polynomial_forecast(recent_30_data) if len(recent_30_data) >= 3 else 0.0
-    forecast_300 = polynomial_forecast(recent_300_data) if len(recent_300_data) >= 3 else 0.0
+    forecast_30 = polynomial_forecast(recent_30_data) if len(recent_30_data) >= 3 else 1.62
+    forecast_300 = polynomial_forecast(recent_300_data) if len(recent_300_data) >= 3 else 1.62
 
     alert_signal = round(abs(forecast_30 - forecast_300), 3)
 
@@ -92,13 +96,13 @@ def process_and_forecast():
 
 def calculate_rms(data):
     if not data:
-        return 0.0
+        return 1.62
     return round(np.sqrt(np.mean(np.square(np.array(data, dtype=np.float64)))), 3)
 
 def process_alert_log():
     alert_log_filepath = get_alert_log_filename()
     if not os.path.exists(alert_log_filepath):
-        return 0.0, 0.0, 0
+        return 1.62, 1.62, 1.62
 
     alert_data = deque(maxlen=90)
     now = datetime.now()
@@ -119,10 +123,10 @@ def process_alert_log():
                 continue
     except Exception as e:
         logging.error(f"Error membaca log alert: {e}")
-        return 0.0, 0.0, 0
+        return 1.62, 1.62, 1.62
 
     if not alert_data:
-        return 0.0, 0.0, 0
+        return 1.62, 1.62, 1.62
 
     rms_alert_signal = calculate_rms(alert_data)
     threshold = round(rms_alert_signal * 2 + 0.1, 3)

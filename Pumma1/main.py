@@ -79,7 +79,7 @@ def mqtt_publisher(queue):
             data = item.get("data")
 
             if topic and data:
-                client.publish(topic, json.dumps(data))
+                client.publish(topic, json.dumps(data), qos=1)
                 print(f"Data sent to MQTT (Topic: {topic}): {data}")
         except Exception as e:
             print(f"Error in MQTT publishing: {e}")

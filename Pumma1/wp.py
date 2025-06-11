@@ -6,25 +6,9 @@ import os
 import psutil
 import threading
 from datetime import datetime
-import fcntl
-import inspect
-import sys
+import fcntl  # Untuk locking file
 
-# ✅ Blokir jika dijalankan langsung
-if __name__ == "__main__":
-    print("❌ ERROR: Script ini tidak boleh dijalankan langsung.")
-    print("✅ Gunakan hanya melalui pemanggilan oleh main.py")
-    sys.exit(1)
-
-# ✅ Blokir jika di-import oleh file selain main.py
-caller_frame = inspect.stack()[1]
-caller_filename = caller_frame.filename
-
-if not caller_filename.endswith("main.py"):
-    print(f"❌ ERROR: readWP.py hanya boleh dipanggil dari main.py, bukan dari {caller_filename}")
-    sys.exit(1)
-
-# --- Kode fungsi dimulai dari sini ---
+# Lock untuk menghindari konflik antar proses yang mengakses port serial
 serial_lock = threading.Lock()
 
 def create_instrument():
@@ -60,7 +44,7 @@ def log_data(water_level_pressure):
     try:
         now = datetime.now()
         if _last_log_time and (now - _last_log_time).total_seconds() < 1:
-            return
+            return  # Hindari duplikasi akibat pemanggilan berdekatan
         _last_log_time = now
 
         filepath = get_log_filename()
@@ -108,6 +92,7 @@ def read_modbus_data(instrument):
 
                 log_data(water_level_pressure)
                 raw_data(MPa, kPa, water_level_pressure, bar, mbar, kg_cm2, psi, mH2O, mmH2O, celcius)
+                print(f"Water_Level_Pressure: {water_level_pressure}")
                 return MPa, kPa, Pa, water_level_pressure, bar, mbar, kg_cm2, psi, mH2O, mmH2O, celcius
             else:
                 print("Response data is incomplete.")
@@ -120,6 +105,8 @@ def get_sensor_data():
     instrument = None
     try:
         instrument = create_instrument()
+        print("Reading Modbus RTU data...")
+
         for _ in range(3):
             water_level_pressure = read_modbus_data(instrument)
             if water_level_pressure is not None:
@@ -132,3 +119,15 @@ def get_sensor_data():
     finally:
         if instrument and instrument.serial.is_open:
             instrument.serial.close()
+            print("Serial port closed.")
+
+# Hindari menjalankan loop saat di-import
+if __name__ == "__main__":
+    print("readWP.py dijalankan langsung — tidak disarankan jika dipakai oleh main.py.")
+    while True:
+        data = get_sensor_data()
+        if data is None:
+            print("Data reading failed, retrying...")
+            time.sleep(1.5)
+        else:
+            time.sleep(1)
