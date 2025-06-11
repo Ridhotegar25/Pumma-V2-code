@@ -1,52 +1,68 @@
-
-
 import os
 from datetime import datetime, timedelta
 
 # Daftar folder dan pola nama file
 directories = [
     {
-        "path": "/home/pi/Data/LogSeaWater",
+        "path": "/home/pi/Data/LogSeaWater", #data water colum height wp 
         "prefix": "Log_WP ",
-        "date_format": "%d-%m-%Y"",
+        "date_format": "%d-%m-%Y",
         "extension": ".txt"
     },
     {
-        "path": "/home/pi/Data/LogAlert",
+        "path": "/home/pi/Data/LogAlert", #alert WP 
         "prefix": "Log_AS",
-        "date_format": "%d-%m-%Y"",
+        "date_format": "%d-%m-%Y",
         "extension": ".txt"
     },
+    {
+        "path": "/home/pi/Data/Raw_WP",
+        "prefix": "Raw_WP ",
+        "date_format": "%d-%m-%Y",
+        "extension": ".txt"
+    },    
     {
         "path": "/home/pi/Data/InfoSistem_Log/Device",
         "prefix": "Device_",
-        "date_format": "%Y%m%d",
+        "date_format": "%d-%m-%Y",
         "extension": ".csv"
     },
     {
         "path": "/home/pi/data/Data_Climate",
         "prefix": "Climate_",
-        "date_format": "%Y%m%d",
+        "date_format": "%d-%m-%Y",
         "extension": ".csv"
     },
     {
-        "path": "/home/pi/Data/Log_maxbo",
-        "prefix": "Log_MB",
-        "date_format": "%d-%m-%Y"",
-        "extension": ".txt"
-    },
-    {
-        "path": "/home/pi/Data/Pumma",
+        "path": "/home/pi/Data/Pumma", #Pumma WP 
         "prefix": "Pumma_",
-        "date_format": "%d-%m-%Y"",
-        "extension": ".txt"
+        "date_format": "%d-%m-%Y",
+        "extension": ".csv"
     },
     {
         "path": "/home/pi/Data/Adjusment",
         "prefix": "Data_",
-        "date_format": "%d-%m-%Y"",
+        "date_format": "%d-%m-%Y",
         "extension": ".csv"
-    }
+    },
+    {
+        "path": "/home/pi/Data/Pumma_MB", #Pumma Mb 
+        "prefix": "Pumma_MB_",
+        "date_format": "%d-%m-%Y",
+        "extension": ".csv"
+    },
+    {
+        "path": "/home/pi/Data/maxbo_LogAlert",
+        "prefix": "Log_AS_MB",
+        "date_format": "%d-%m-%Y",
+        "extension": ".txt"
+    },
+    {
+        "path": "/home/pi/Data/Log_maxbo",
+        "prefix": "Log_MB",
+        "date_format": "%d-%m-%Y",
+        "extension": ".txt"
+    }        
 ]
 
 # Hitung batas waktu 60 hari yang lalu
